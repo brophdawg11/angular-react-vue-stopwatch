@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux'
+import { setActive, incrementTime, resetTime, addPreviousTime  } from '../actions'
 
-export class Stopwatch extends React.Component {
+class Stopwatch extends React.Component {
 
   subscription = null;
 
@@ -22,27 +24,27 @@ export class Stopwatch extends React.Component {
   render() {
     return (
       <div>
-        <h2>{ this.toNumber(this.state.time) }</h2>
+        <h2>{ this.toNumber(this.props.time) }</h2>
 
         <button onClick={this.start}
-                disabled={this.state.active}>
+                disabled={this.props.active}>
           Start
         </button>
         <button onClick={this.stop}
-                disabled={!this.state.active}>
+                disabled={!this.props.active}>
           Stop
         </button>
         <button onClick={this.reset}>
           Reset
         </button>
 
-        { this.previousTime() + this.state.time > 0 && (
+        { this.previousTime() + this.props.time > 0 && (
           <p>
-            Total elapsed time: { this.toNumber(this.previousTime() + this.state.time) }
+            Total elapsed time: { this.toNumber(this.previousTime() + this.props.time) }
           </p> )}
 
         <ol>
-          { this.state.previousTimes.map((time, index) =>
+          { this.props.previousTimes.map((time, index) =>
             <li key={index}>
               { this.toNumber(time) }
             </li>) }
@@ -52,7 +54,7 @@ export class Stopwatch extends React.Component {
   }
 
   previousTime() {
-    return this.state.previousTimes.reduce((prev, cur) => prev + cur, 0);
+    return this.props.previousTimes.reduce((prev, cur) => prev + cur, 0);
   }
 
   toNumber(value) {
@@ -60,28 +62,38 @@ export class Stopwatch extends React.Component {
   }
 
   start() {
-    if (this.state.active) return;
-
-    this.setState({ active: true })
-    this.subscription = setInterval(() =>
-      this.setState({ time: this.state.time + 0.01 }), 10);
+    this.props.setActive(true)
+    this.subscription = setInterval(this.props.incrementTime, 10);
   }
 
   stop() {
-    if (!this.state.active) return;
-
-    this.setState({ active: false })
+    this.props.setActive(false)
     clearInterval(this.subscription);
     this.subscription = null;
   }
 
   reset() {
     this.stop();
-    this.setState({
-      previousTimes: [ ...this.state.previousTimes, this.state.time ]
-    });
-    this.setState({
-      time: 0.0
-    });
+
+    this.props.addPreviousTime(this.props.time);
+    this.props.resetTime();
   }
 }
+
+function mapStateToProps(state, ownProps) {
+
+  return {
+    time: state.time,
+    active: state.active,
+    previousTimes: state.previousTimes
+  }
+}
+
+const mapDispatchToProps = {
+    setActive,
+    incrementTime,
+    resetTime,
+    addPreviousTime
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Stopwatch)
