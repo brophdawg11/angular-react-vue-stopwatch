@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Angular, React, Vue Comparison</title>
+    <title>React/Vue Comparison</title>
 </head>
 <body>
     <noscript>
         You need to enable JavaScript to run this app.
     </noscript>
-    <h1>Angular, React, and Vue Comparison</h1>
+    <h1>React/Vue Comparison</h1>
     <p>
-        Below are three 'stopwatch' components, each with identical functionality.
-        In this page right now are three separate applications written in three separate frameworks - neat, eh?
+        Below are two 'stopwatch' components, each with identical functionality.
+        In this page right now are two separate applications written in two separate frameworks - neat, eh?
     </p>
     <p>To use:</p>
     <ul>
@@ -25,16 +25,7 @@
         While simple, these features show off the fundamental aspects of each framework - user interaction, conditional rendering,
         dynamically-computed display values, event handling, state management, and async data updates.
     </p>
-    <p>
-        <b>Important note:</b> I have done some very basic optimizations to reduce bundle bloat but have not given these the full production treatment. You can see
-        in your dev tools that the Vue and React bundles are pretty small (but not tiny) and the Angular bundle is massive - this is because
-        I have not enabled Ahead-of-Time compilation and other production features for this example, so don't get fixated on those numbers since
-        they aren't realistic.
-    </p>
     <div class="stopwatches">
-        <div id="angular" class="stopwatch">
-            <app></app>
-        </div>
         <div id="react" class="stopwatch"></div>
         <div id="vue" class="stopwatch"></div>
     </div>

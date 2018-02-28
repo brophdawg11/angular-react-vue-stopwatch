@@ -6,7 +6,6 @@ const webpack = require('webpack');
 module.exports = options => {
   return {
     entry: {
-      angular: './src/angular/main.ts',
       react: './src/react/index.jsx',
       vue: './src/vue/main.js'
     },
@@ -66,16 +65,13 @@ module.exports = options => {
       }),
       new FriendlyErrorsPlugin(),
       new HtmlWebpackPlugin({
-        title: 'Angular, React, Vue Stopwatches',
+        title: 'React/Vue Stopwatches',
         template: 'src/index.html',
       }),
       new HtmlWebpackIncludeAssetsPlugin({
         assets: ['src/styles.css'],
         append: false
       }),
-      new webpack.ContextReplacementPlugin(
-        /angular([\\\/])core(\\|\/)@angular/
-      ),
       new webpack.optimize.UglifyJsPlugin({
         mangle: true,
         comments: false,

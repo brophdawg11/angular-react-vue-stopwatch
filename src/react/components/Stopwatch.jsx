@@ -1,7 +1,4 @@
 import React from 'react';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-
-import { Constants } from '../../common';
 
 export class Stopwatch extends React.Component {
 
@@ -9,70 +6,82 @@ export class Stopwatch extends React.Component {
 
   constructor() {
     super();
-  }
 
-  componentWillMount() {
-    this.setState({
+    this.state = {
       time: 0.0,
       previousTimes: [],
       active: false
-    });
+    };
+
+    this.previousTime = this.previousTime.bind(this);
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   render() {
-    const previousTime = this.state.previousTimes.reduce((prev, cur) => prev + cur, 0);
+    return (
+      <div>
+        <h2>{ this.toNumber(this.state.time) }</h2>
 
-    return <div>
-      <h2>{ this.state.time.toFixed(2) }</h2>
-      <button onClick={this.start.bind(this)} disabled={this.state.active}>Start</button>
-      <button onClick={this.stop.bind(this)} disabled={!this.state.active}>Stop</button>
-      <button onClick={this.reset.bind(this)}>Reset</button>
-      { previousTime + this.state.time > 0 && ( <p>Total elapsed time: { (previousTime + this.state.time).toFixed(2) }</p> ) }
+        <button onClick={this.start}
+                disabled={this.state.active}>
+          Start
+        </button>
+        <button onClick={this.stop}
+                disabled={!this.state.active}>
+          Stop
+        </button>
+        <button onClick={this.reset}>
+          Reset
+        </button>
 
-      <ol>
-      { this.state.previousTimes.map((time, index) => <li key={index}>{time.toFixed(2)}</li>) }
-      </ol>
-    </div>
+        { this.previousTime() + this.state.time > 0 && (
+          <p>
+            Total elapsed time: { this.toNumber(this.previousTime() + this.state.time) }
+          </p> )}
+
+        <ol>
+          { this.state.previousTimes.map((time, index) =>
+            <li key={index}>
+              { this.toNumber(time) }
+            </li>) }
+        </ol>
+      </div>
+    );
+  }
+
+  previousTime() {
+    return this.state.previousTimes.reduce((prev, cur) => prev + cur, 0);
+  }
+
+  toNumber(value) {
+    return value.toFixed(2);
   }
 
   start() {
-    this.subscription = IntervalObservable.create(Constants.PERIOD).subscribe(() => {
-      this.setTime(this.state.time + Constants.INCREMENT);
-    });
-    this.setActive(true);
+    if (this.state.active) return;
+
+    this.setState({ active: true })
+    this.subscription = setInterval(() =>
+      this.setState({ time: this.state.time + 0.01 }), 10);
   }
 
   stop() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    if (!this.state.active) return;
+
+    this.setState({ active: false })
+    clearInterval(this.subscription);
     this.subscription = null;
-    this.setActive(false);
   }
 
   reset() {
     this.stop();
-    this.addPreviousTime(this.state.time);
-    this.setTime(0.0);
-  }
-
-  addPreviousTime(prevTime) {
-    this.state.previousTimes.push(prevTime);
-
     this.setState({
-      previousTimes: this.state.previousTimes
+      previousTimes: [ ...this.state.previousTimes, this.state.time ]
     });
-  }
-
-  setTime(time) {
     this.setState({
-      time
-    });
-  }
-
-  setActive(active) {
-    this.setState({
-      active
+      time: 0.0
     });
   }
 }

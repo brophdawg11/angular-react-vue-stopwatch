@@ -1,77 +1,76 @@
 <template>
   <div>
-    <h2>{{ time | number }}</h2>
-    <button v-on:click="start" v-bind:disabled="isRunning">Start</button>
-    <button v-on:click="stop" v-bind:disabled="!isRunning">Stop</button>
-    <button v-on:click="reset">Reset</button>
-    <p v-if="previousTime + time > 0">Total elapsed time: {{ previousTime + time | number }}</p>
+    <h2>{{ time | toNumber }}</h2>
+
+    <button v-on:click="start"
+            v-bind:disabled="active">
+      Start
+    </button>
+    <button v-on:click="stop"
+            v-bind:disabled="!active">
+      Stop
+    </button>
+    <button v-on:click="reset">
+      Reset
+    </button>
+
+
+    <p v-if="previousTime + time > 0">
+      Total elapsed time: {{ previousTime + time | toNumber }}
+    </p>
+
     <ol>
-      <li v-for="time in previousTimes">
-        {{ time | number }}
+
+      <li v-for="(time, index) in previousTimes"
+          :key="index">
+        {{ time | toNumber }}
       </li>
     </ol>
   </div>
 </template>
 
 <script>
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { Subscription } from 'rxjs/Subscription';
-import { Constants } from '../../common';
-
-let subscription = null;
-
-const state = {
-  time: 0.0,
-  previousTimes: [],
-  isRunning: false
-};
-
-const start = () => {
-  if (state.isRunning) return;
-
-  state.isRunning = true;
-  subscription = IntervalObservable.create(Constants.PERIOD).subscribe(() => state.time += Constants.INCREMENT);
-};
-
-const stop = () => {
-  if (!state.isRunning) return;
-
-  state.isRunning = false;
-  if (subscription) {
-    subscription.unsubscribe();
-    subscription = null;
-  }
-};
-
-const reset = () => {
-  stop();
-  state.previousTimes.push(state.time);
-  state.time = 0.0;
-};
-
 export default {
-  name: 'stopwatch',
+  created() {
+      this.subscription = null;
+  },
   data() {
-    return state;
+    return {
+      time: 0.0,
+      previousTimes: [],
+      active: false
+    };
   },
   computed: {
-    previousTime: () => {
-      return state.previousTimes.reduce((prev, cur) => prev + cur, 0);
+    previousTime () {
+      return this.previousTimes.reduce((prev, cur) => prev + cur, 0);
     }
   },
   filters: {
-    number: value => {
+    toNumber(value) {
       return value.toFixed(2);
     }
   },
   methods: {
-    start,
-    stop,
-    reset
+    start() {
+      if (this.active) return;
+
+      this.active = true;
+      this.subscription = setInterval(() =>
+        this.time += 0.01, 10);
+    },
+    stop() {
+      if (!this.active) return;
+
+      this.active = false;
+      clearInterval(this.subscription);
+      this.subscription = null;
+    },
+    reset() {
+      this.stop();
+      this.previousTimes.push(this.time);
+      this.time = 0.0;
+    }
   }
 }
 </script>
-
-<style scoped>
-
-</style>
