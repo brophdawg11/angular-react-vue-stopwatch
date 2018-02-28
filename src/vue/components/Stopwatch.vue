@@ -13,19 +13,6 @@
     <button v-on:click="reset">
       Reset
     </button>
-
-
-    <p v-if="previousTime + time > 0">
-      Total elapsed time: {{ previousTime + time | toNumber }}
-    </p>
-
-    <ol>
-
-      <li v-for="(time, index) in previousTimes"
-          :key="index">
-        {{ time | toNumber }}
-      </li>
-    </ol>
   </div>
 </template>
 
@@ -37,14 +24,8 @@ export default {
   data() {
     return {
       time: 0.0,
-      previousTimes: [],
       active: false
     };
-  },
-  computed: {
-    previousTime () {
-      return this.previousTimes.reduce((prev, cur) => prev + cur, 0);
-    }
   },
   filters: {
     toNumber(value) {
@@ -68,7 +49,6 @@ export default {
     },
     reset() {
       this.stop();
-      this.previousTimes.push(this.time);
       this.time = 0.0;
     }
   }

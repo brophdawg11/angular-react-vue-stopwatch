@@ -9,11 +9,9 @@ export class Stopwatch extends React.Component {
 
     this.state = {
       time: 0.0,
-      previousTimes: [],
       active: false
     };
 
-    this.previousTime = this.previousTime.bind(this);
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
     this.reset = this.reset.bind(this);
@@ -36,23 +34,8 @@ export class Stopwatch extends React.Component {
           Reset
         </button>
 
-        { this.previousTime() + this.state.time > 0 && (
-          <p>
-            Total elapsed time: { this.toNumber(this.previousTime() + this.state.time) }
-          </p> )}
-
-        <ol>
-          { this.state.previousTimes.map((time, index) =>
-            <li key={index}>
-              { this.toNumber(time) }
-            </li>) }
-        </ol>
       </div>
     );
-  }
-
-  previousTime() {
-    return this.state.previousTimes.reduce((prev, cur) => prev + cur, 0);
   }
 
   toNumber(value) {
@@ -77,9 +60,6 @@ export class Stopwatch extends React.Component {
 
   reset() {
     this.stop();
-    this.setState({
-      previousTimes: [ ...this.state.previousTimes, this.state.time ]
-    });
     this.setState({
       time: 0.0
     });
