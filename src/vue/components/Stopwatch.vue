@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import { mutations, actions } from '../store';
 
 export default {
@@ -73,6 +73,7 @@ export default {
     }
   },
   methods: {
+    // Method 1 - Explicit $store.commit()/dispatch() calls
     start() {
       this.$store.commit(mutations.SET_ACTIVE, true);
       this.$store.dispatch(actions.START_INTERVAL);
@@ -85,7 +86,34 @@ export default {
       this.stop();
       this.$store.commit(mutations.ADD_PREVIOUS_TIME, this.time);
       this.$store.commit(mutations.RESET_TIME);
-    }
+    },
+
+    // Method 2 - Vuex utilities to map them to methods
+    // ...mapMutations({
+    //   setActive: mutations.SET_ACTIVE,
+    //   resetTime: mutations.RESET_TIME,
+    //   increment: mutations.INCREMENT,
+    //   addPreviousTime: mutations.ADD_PREVIOUS_TIME
+    // }),
+
+    // ...mapActions({
+    //   startInterval: actions.START_INTERVAL,
+    //   stopInterval: actions.STOP_INTERVAL,
+    // }),
+
+    // start() {
+    //   this.setActive(true);
+    //   this.startInterval();
+    // },
+    // stop() {
+    //   this.setActive(false),
+    //   this.stopInterval();
+    // },
+    // reset() {
+    //   this.stop();
+    //   this.addPreviousTime(this.time);
+    //   this.resetTime();
+    // },
   }
 }
 </script>
