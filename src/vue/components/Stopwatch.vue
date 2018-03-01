@@ -2,15 +2,15 @@
   <div>
     <h2>{{ time | toNumber }}</h2>
 
-    <button v-on:click="start"
-            v-bind:disabled="active">
+    <button @click="start"
+            :disabled="active">
       Start
     </button>
-    <button v-on:click="stop"
-            v-bind:disabled="!active">
+    <button @click="stop"
+            :disabled="!active">
       Stop
     </button>
-    <button v-on:click="reset">
+    <button @click="reset">
       Reset
     </button>
 
