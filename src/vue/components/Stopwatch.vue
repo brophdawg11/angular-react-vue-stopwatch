@@ -75,17 +75,16 @@ export default {
   methods: {
     // Method 1 - Explicit $store.commit()/dispatch() calls
     start() {
-      this.$store.commit(mutations.SET_ACTIVE, true);
       this.$store.dispatch(actions.START_INTERVAL);
     },
     stop() {
-      this.$store.commit(mutations.SET_ACTIVE, false);
       this.$store.dispatch(actions.STOP_INTERVAL);
     },
     reset() {
       this.stop();
-      this.$store.commit(mutations.ADD_PREVIOUS_TIME, this.time);
-      this.$store.commit(mutations.RESET_TIME);
+      this.$store.dispatch(actions.RESET_TIME, {
+        time: this.time,
+      });
     },
 
     // Method 2 - Vuex utilities to map them to methods

@@ -16,6 +16,7 @@ export const mutations = {
 export const actions = {
   START_INTERVAL: 'START_INTERVAL',
   STOP_INTERVAL: 'STOP_INTERVAL',
+  RESET_TIME: 'RESET_TIME',
 };
 
 let interval = null;
@@ -46,12 +47,18 @@ export default new Vuex.Store({
   // Actions to perform async tasks
   actions: {
     [actions.START_INTERVAL]({ commit, state }) {
+      commit(mutations.SET_ACTIVE, true);
       interval = setInterval(() => commit(mutations.INCREMENT, 0.01), 10);
     },
     [actions.STOP_INTERVAL]({ commit, state }) {
+      commit(mutations.SET_ACTIVE, false);
       clearInterval(interval);
       interval = null;
     },
+    [actions.RESET_TIME]({ commit, state }, payload) {
+      commit(mutations.ADD_PREVIOUS_TIME, payload.time);
+      commit(mutations.RESET_TIME);
+    }
   },
 });
 
