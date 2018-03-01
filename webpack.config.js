@@ -5,6 +5,7 @@ const webpack = require('webpack');
 
 module.exports = options => {
   return {
+    devtool: 'inline-source-map',
     entry: {
       react: './src/react/index.jsx',
       vue: './src/vue/main.js'
@@ -71,15 +72,6 @@ module.exports = options => {
       new HtmlWebpackIncludeAssetsPlugin({
         assets: ['src/styles.css'],
         append: false
-      }),
-      new webpack.optimize.UglifyJsPlugin({
-        mangle: true,
-        comments: false,
-        sourceMap: false,
-        compress: {
-          screw_ie8: true,
-          warnings: false
-        }
       })
     ],
     devServer: {
