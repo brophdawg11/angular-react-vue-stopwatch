@@ -4,6 +4,7 @@ import createLogger from 'vuex/dist/logger';
 
 Vue.use(Vuex);
 
+// Dispatchable mutations
 export const mutations = {
   SET_ACTIVE: 'SET_ACTIVE',
   INCREMENT: 'INCREMENT',
@@ -11,6 +12,7 @@ export const mutations = {
   ADD_PREVIOUS_TIME: 'ADD_PREVIOUS_TIME',
 };
 
+// Dispatchable actions
 export const actions = {
   START_INTERVAL: 'START_INTERVAL',
   STOP_INTERVAL: 'STOP_INTERVAL',
@@ -18,14 +20,15 @@ export const actions = {
 
 let interval = null;
 
-/* eslint-disable no-param-reassign */
 export default new Vuex.Store({
   plugins: [ createLogger() ],
+  // Initial State
   state: {
     time: 0.0,
     previousTimes: [],
     active: false,
   },
+  // Mutations to synchronously modify the state
   mutations: {
     [mutations.SET_ACTIVE](state, payload) {
       state.active = payload;
@@ -40,6 +43,7 @@ export default new Vuex.Store({
       state.previousTimes.push(payload);
     },
   },
+  // Actions to perform async tasks
   actions: {
     [actions.START_INTERVAL]({ commit, state }) {
       interval = setInterval(() => commit(mutations.INCREMENT, 0.01), 10);

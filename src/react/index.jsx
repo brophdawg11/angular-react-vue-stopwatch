@@ -3,13 +3,8 @@ import ReactDOM from "react-dom";
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import Stopwatch from "./components/Stopwatch";
-import  stopWatchReducer from "./reducers"
+import { initialState, stopWatchReducer } from "./store"
 
-const initialState = {
-    active: false,
-    time: 0.00,
-    previousTimes: []
-}
 const store = createStore(stopWatchReducer, initialState);
 
 ReactDOM.render(

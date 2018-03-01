@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { setActive, incrementTime, resetTime, addPreviousTime  } from '../actions'
+import { setActive, incrementTime, resetTime, addPreviousTime  } from '../store'
 
 class Stopwatch extends React.Component {
 
