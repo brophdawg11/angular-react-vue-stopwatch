@@ -39,15 +39,15 @@ export default {
   },
   computed: {
     // Method 1 => Explicit
-    // time() {
-    //   return this.$store.state.time;
-    // },
-    // previousTimes() {
-    //   return this.$store.state.previousTimes;
-    // },
-    // active() {
-    //   return this.$store.state.active;
-    // },
+    time() {
+      return this.$store.state.time;
+    },
+    previousTimes() {
+      return this.$store.state.previousTimes;
+    },
+    active() {
+      return this.$store.state.active;
+    },
 
     // Method 2 => Mapper functions
     // ...mapState({
@@ -57,11 +57,11 @@ export default {
     // }),
 
     // Method 3 => shorthand property references
-    ...mapState([
-      'time',
-      'previousTimes',
-      'active',
-    ]),
+    // ...mapState([
+    //   'time',
+    //   'previousTimes',
+    //   'active',
+    // ]),
 
     previousTime() {
       return this.previousTimes.reduce((prev, cur) => prev + cur, 0);
