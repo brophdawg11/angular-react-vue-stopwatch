@@ -30,21 +30,42 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { mutations, actions } from '../store';
+
 export default {
   created() {
       this.subscription = null;
   },
-  data() {
-    return {
-      time: 0.0,
-      previousTimes: [],
-      active: false
-    };
-  },
   computed: {
-    previousTime () {
+    // Method 1 => Explicit
+    // time() {
+    //   return this.$store.state.time;
+    // },
+    // previousTimes() {
+    //   return this.$store.state.previousTimes;
+    // },
+    // active() {
+    //   return this.$store.state.active;
+    // },
+
+    // Method 2 => Mapper functions
+    // ...mapState({
+    //   time: state => state.time,
+    //   previousTimes: state => state.previousTimes,
+    //   active: state => state.active,
+    // }),
+
+    // Method 3 => shorthand property references
+    ...mapState([
+      'time',
+      'previousTimes',
+      'active',
+    ]),
+
+    previousTime() {
       return this.previousTimes.reduce((prev, cur) => prev + cur, 0);
-    }
+    },
   },
   filters: {
     toNumber(value) {
@@ -53,23 +74,17 @@ export default {
   },
   methods: {
     start() {
-      if (this.active) return;
-
-      this.active = true;
-      this.subscription = setInterval(() =>
-        this.time += 0.01, 10);
+      this.$store.commit(mutations.SET_ACTIVE, true);
+      this.$store.dispatch(actions.START_INTERVAL);
     },
     stop() {
-      if (!this.active) return;
-
-      this.active = false;
-      clearInterval(this.subscription);
-      this.subscription = null;
+      this.$store.commit(mutations.SET_ACTIVE, false);
+      this.$store.dispatch(actions.STOP_INTERVAL);
     },
     reset() {
       this.stop();
-      this.previousTimes.push(this.time);
-      this.time = 0.0;
+      this.$store.commit(mutations.ADD_PREVIOUS_TIME, this.time);
+      this.$store.commit(mutations.RESET_TIME);
     }
   }
 }
