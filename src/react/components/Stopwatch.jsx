@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { setActive, incrementTime, resetTime, addPreviousTime  } from '../store'
+import { setActive, setInactive, resetTime, addPreviousTime  } from '../store'
 
 class Stopwatch extends React.Component {
 
@@ -63,20 +63,14 @@ class Stopwatch extends React.Component {
 
   start() {
     this.props.setActive(true)
-    this.subscription = setInterval(this.props.incrementTime, 10);
   }
 
   stop() {
-    this.props.setActive(false)
-    clearInterval(this.subscription);
-    this.subscription = null;
+    this.props.setInactive(false)
   }
 
   reset() {
-    this.stop();
-
-    this.props.addPreviousTime(this.props.time);
-    this.props.resetTime();
+    this.props.resetTime(this.props.time);
   }
 }
 
@@ -91,9 +85,8 @@ function mapStateToProps(state, ownProps) {
 
 const mapDispatchToProps = {
     setActive,
-    incrementTime,
+    setInactive,
     resetTime,
-    addPreviousTime
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stopwatch)
