@@ -7,7 +7,7 @@ module.exports = options => {
   return {
     entry: {
       react: './src/react/index.jsx',
-      vue: './src/vue/main.js'
+      vue: './src/vue/index.js'
     },
     output: {
       filename: '[name].js'
